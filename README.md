@@ -30,7 +30,7 @@ Define se o método de comparação é case sentive ou não.
  Tipo de Join(INNER_JOIN, LEFT_JOIN...).
  
  ## Exemplo de utilização
- 
+ ### Entidade de Pessoa
  ```
  @Entity
 @Table
@@ -44,15 +44,19 @@ public class Pessoa {
 }
 
  ```
+ ### Entidade Endereco
+ 
  ``` 
  public class Endereco {
 	private Integer id;
     private String descricao;
 }
+ 
  ```
+ ### Filtro de consulta para entidade Pessoa
   ```
 public class PessoaFilter extends QueryFilter {
-
+        
 	@QueryField(restriction = RestrictionType.LIKE, matchMode = MatchMode.START, ignoreCase = true)
 	private String nome;
 
@@ -66,6 +70,8 @@ public class PessoaFilter extends QueryFilter {
 
 }
  ```
+ ### Filtro da entidade Endereço
+ 
   ```
 public class EnderecoFilter {
 	@QueryField
