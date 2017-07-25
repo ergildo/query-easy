@@ -2,11 +2,14 @@ package br.com.ecd.queryutil.util;
 
 import java.beans.Introspector;
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.sql.JoinType;
 
 import br.com.ecd.queryutil.OrderField;
 import br.com.ecd.queryutil.QueryFilter;
@@ -26,6 +29,16 @@ import br.com.ecd.queryutil.annotation.QueryField;
  */
 public class QueryUtils {
 
+	private Map<String, String> joins;
+
+	public static QueryUtils getInstance() {
+		return new QueryUtils();
+	}
+
+	private QueryUtils() {
+
+	}
+
 	/**
 	 * Cria {@link Criteria} para o filtro informado
 	 * 
@@ -34,48 +47,102 @@ public class QueryUtils {
 	 * @param filter
 	 * @return
 	 */
-	public static Criteria createCriteria(Session session, Class<?> entity, QueryFilter filter) {
+	public Criteria createCriteria(Session session, Class<?> entity, QueryFilter filter) {
 
-		if (session == null) {
-			throw new IllegalArgumentException("Session não pode ser null");
+		try {
+			if (session == null) {
+				throw new IllegalArgumentException("Session não pode ser null");
+			}
+
+			if (filter == null) {
+				throw new IllegalArgumentException("Filter não pode ser null");
+			}
+
+			clearJoins();
+
+			String alias = getAliasByClass(entity);
+
+			Criteria criteria = session.createCriteria(entity, alias);
+
+			addRestritions(criteria, alias, filter);
+
+			addOrder(filter, alias, criteria);
+
+			addPaginator(filter, criteria);
+
+			return criteria;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
-
-		if (filter == null) {
-			throw new IllegalArgumentException("Filter não pode ser null");
-		}
-
-		String alias = getAliasByClass(entity);
-
-		Criteria criteria = session.createCriteria(entity, alias);
-
-		addRestritions(criteria, alias, filter);
-
-		addOrder(filter, criteria);
-
-		addPaginator(filter, criteria);
-
-		return criteria;
 	}
 
-	private static String getAliasByClass(Class<?> entity) {
+	private void clearJoins() {
+		joins = new HashMap<String, String>();
+	}
+
+	private String getAliasByClass(Class<?> entity) {
 		return Introspector.decapitalize(entity.getSimpleName());
 	}
 
-	private static void addPaginator(QueryFilter filter, Criteria criteria) {
+	private void addPaginator(QueryFilter filter, Criteria criteria) {
 		criteria.setMaxResults(filter.getMaxResult());
 		criteria.setFirstResult(filter.getFirstResult());
 	}
 
-	private static void addOrder(QueryFilter filter, Criteria criteria) {
+	private void addOrder(QueryFilter filter, String alias, Criteria criteria)
+			throws NoSuchFieldException, SecurityException {
 		String sortField = filter.getSortField();
 
 		if (StringUtils.isNotEmpty(sortField)) {
 			OrderField sortOrder = filter.getSortOrder();
 			if (sortOrder != null) {
-				sortOrder.addOrder(criteria, sortField);
+
+				String orderProperty = resolveProperty(alias, sortField, criteria);
+
+				sortOrder.addOrder(criteria, orderProperty);
 			}
 
 		}
+	}
+
+	private String resolveProperty(String alias, String property, Criteria criteria) {
+
+		int indexOf = property.indexOf(".");
+
+		if (indexOf != -1) {
+
+			String newProperty = property.substring(indexOf + 1);
+
+			String atualProperty = property.substring(0, indexOf);
+
+			String newAlias = createAlias(alias, criteria, atualProperty, JoinType.LEFT_OUTER_JOIN);
+
+			return resolveProperty(newAlias, newProperty, criteria);
+		}
+
+		String resolveProperty = getPropertyPath(alias, property);
+
+		return resolveProperty;
+	}
+
+	private String createAlias(String alias, Criteria criteria, String property, JoinType joinType) {
+		String newAlias = alias.concat("_").concat(property);
+
+		if (joins.containsKey(newAlias)) {
+			return newAlias;
+		}
+
+		String aliasPath = getPropertyPath(alias, property);
+
+		criteria.createAlias(aliasPath, newAlias, joinType);
+
+		joins.put(newAlias, aliasPath);
+
+		return newAlias;
+	}
+
+	private String getPropertyPath(String alias, String property) {
+		return alias.concat(".").concat(property);
 	}
 
 	/**
@@ -86,7 +153,7 @@ public class QueryUtils {
 	 * @param filter
 	 * @return criteria
 	 */
-	public static Criteria addRestritions(Criteria criteria, String alias, Object filter) {
+	public Criteria addRestritions(Criteria criteria, String alias, Object filter) {
 		if (filter == null) {
 			throw new IllegalArgumentException("Filter não pode ser null");
 		}
@@ -105,10 +172,9 @@ public class QueryUtils {
 
 					JoinFilter joinFilter = field.getAnnotation(JoinFilter.class);
 
-					String propertyName = joinFilter.property();
-					String property = getAlias(alias, propertyName);
-					criteria.createAlias(property, propertyName, joinFilter.joinType());
-					addRestritions(criteria, propertyName, value);
+					String newAlias = createAlias(alias, criteria, joinFilter.property(), joinFilter.joinType());
+
+					addRestritions(criteria, newAlias, value);
 
 				}
 
@@ -116,7 +182,7 @@ public class QueryUtils {
 
 					QueryField queryField = field.getAnnotation(QueryField.class);
 
-					String propertyName = getAlias(alias, queryField.property());
+					String propertyName = getPropertyPath(alias, queryField.property());
 
 					String bindField = queryField.bindField();
 
@@ -141,23 +207,13 @@ public class QueryUtils {
 	}
 
 	/**
-	 * @param alias
-	 * @param propertyName
-	 * @return
-	 */
-	private static String getAlias(String alias, String propertyName) {
-		return alias.concat(".").concat(propertyName);
-	}
-
-	/**
 	 * @param filtro
 	 * @param property
 	 * @return
 	 * @throws IllegalAccessException
 	 * @throws NoSuchFieldException
 	 */
-	private static Object getFieldValue(Object filtro, String property)
-			throws IllegalAccessException, NoSuchFieldException {
+	private Object getFieldValue(Object filtro, String property) throws IllegalAccessException, NoSuchFieldException {
 		if (StringUtils.isEmpty(property)) {
 			return null;
 		}

@@ -22,7 +22,7 @@ public enum OrderField {
 	DESC {
 		@Override
 		public void addOrder(Criteria criteria, String propertyName) {
-			criteria.addOrder(Order.asc(propertyName));
+			criteria.addOrder(Order.desc(propertyName));
 		}
 	};
 
