@@ -4,29 +4,29 @@ Este utilitário visa facilitar a criação de queries com o hibernate. Por meio
 # Utilização
 A utilização é muito simples, basta extender a classe QueryFilter e definir os campos da consulta através da anotação @QueryField e @JoinFilter.
 
-# @QueryField
+## @QueryField
 Define um campo de consulta, esta anotação tem as seguintes propriedades:
 
-## property
+### property
  Define o nome da propriedade, quando não informado nome da propriedade anotada deve ser equivalente ao nome da propriedade na entidade.
 
-## restriction
+### restriction
 Define o tipo de restrição (EQ, NE, LIKE...). O valor padrão é EQ.
 
-## bindField
+### bindField
 Define o campo vinculado. Utilizado para definir dois parâmentro na mesma restrição, por exemplo: restrições do tipo BETWEEN precisa do valor inicial e final, neste caso use esta propriedade para definir qual campo armazena o valor final.
 
-## matchMode
+### matchMode
 Define o método de comparação (START, END, ANYWHERE). O valor padrão é START.
 
-##ignoreCase
+### ignoreCase
 Define se o método de comparação é case sentive ou não.
 
-# @JoinFilter
-## property
+## @JoinFilter
+### property
  Define o nome da propriedade, quando não informado nome da propriedade anotada deve ser equivalente ao nome da propriedade na entidade.
  
- ## joinType
+ ### joinType
  Tipo de Join(INNER_JOIN, LEFT_JOIN...).
 
 
