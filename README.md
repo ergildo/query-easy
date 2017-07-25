@@ -44,6 +44,34 @@ public class Pessoa {
 }
 
  ```
+ ``` 
+ public class Endereco {
+	private Integer id;
+    private String descricao;
+}
+ ```
+  ```
+public class PessoaFilter extends QueryFilter {
+
+	@QueryField(restriction = RestrictionType.LIKE, matchMode = MatchMode.START, ignoreCase = true)
+	private String nome;
+
+	@JoinFilter(property = "endereco", joinType = JoinType.LEFT_OUTER_JOIN)
+	private EnderecoFilter endereco;
+
+	@QueryField(property = "cadastro", restriction = RestrictionType.BETWEEN, bindField = "dataFinal")
+	private Date dataInicial;
+
+	private Date dataFinal;	
+
+}
+ ```
+  ```
+public class EnderecoFilter {
+	@QueryField
+	private String descricao;
+}
+ ```
 
 
 
