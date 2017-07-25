@@ -1,2 +1,2 @@
 # query-util
-Utilitário para geração de query dinânica
+Utilitário para geração de query dinâmica
