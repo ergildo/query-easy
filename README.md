@@ -28,6 +28,22 @@ Define se o método de comparação é case sentive ou não.
  
  ### joinType
  Tipo de Join(INNER_JOIN, LEFT_JOIN...).
+ 
+ ## Exemplo de utilização
+ 
+ ```
+ @Entity
+@Table
+public class Pessoa {
+	private Integer id;
+	private String nome;
+	private Date cadastro;
+	@OneToOne
+	@JoinColumn(name = "endereco")
+	private Endereco endereco;
+}
+
+ ```
 
 
 
