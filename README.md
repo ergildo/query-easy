@@ -23,8 +23,10 @@ Define o método de comparação (START, END, ANYWHERE). O valor padrão é STAR
 Define se o método de comparação é case sentive ou não.
 
 ## @JoinFilter
+Define um filtro de junção. Utilizado para definir filtro de propriedade de um relaciomento. A propriedade anotada deve ser outro filtro, opcionalmente, este filtro pode ou não extender a classe QueryFilter.
+
 ### property
- Define o nome da propriedade, quando não informado nome da propriedade anotada deve ser equivalente ao nome da propriedade na entidade.
+ Define o nome da propriedade, quando não informado nome da propriedade anotada deve ser equivalente ao nome da propriedade na entidade.  
  
  ### joinType
  Tipo de Join(INNER_JOIN, LEFT_JOIN...).
@@ -78,6 +80,8 @@ public class EnderecoFilter {
 	private String descricao;
 }
  ```
+ 
+ Veja que a entidade Pessoa possui o relacionamento com a entidade Endereco, neste caso, utiliza-se a anotação @JoinFilter para a junção dos dois filtros. Um detalhe interessante é que o filtro EnderecoFilter não extende a classe QueryFilter, pois, neste caso é opcional. Porém, o filtro principal deve obrigadoriamente extender a classe QueryFilter. 
 
 
 
