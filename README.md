@@ -1,4 +1,4 @@
-# query-util
+# query-easy
 Este utilitário visa facilitar a criação de queries com o hibernate. Por meio de filtros pré definidos ele gera automáticamente as queries implementando, além do filtro de consulta, ordenação e paginação sob demanda. Tudo isso de forma transparente. Otimiza a criação de queries abstraindo a complexidade e reduzindo significativamente a quantidade de código. 
 
 # Utilização
