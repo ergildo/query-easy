@@ -72,6 +72,8 @@ public class PessoaFilter extends QueryFilter {
 
 }
  ```
+Veja que a entidade Pessoa possui o relacionamento com a entidade Endereco, neste caso, utiliza-se a anotação @JoinFilter para a junção dos dois filtros. Um detalhe interessante é que o filtro EnderecoFilter não extende a classe QueryFilter, pois, neste caso é opcional. Porém, o filtro principal deve obrigadoriamente extender a classe QueryFilter. 
+  
  ### Filtro da entidade Endereço
  
   ```
@@ -80,8 +82,28 @@ public class EnderecoFilter {
 	private String descricao;
 }
  ```
- 
- Veja que a entidade Pessoa possui o relacionamento com a entidade Endereco, neste caso, utiliza-se a anotação @JoinFilter para a junção dos dois filtros. Um detalhe interessante é que o filtro EnderecoFilter não extende a classe QueryFilter, pois, neste caso é opcional. Porém, o filtro principal deve obrigadoriamente extender a classe QueryFilter. 
+### DAO da entidade Pessoa
+ ```
+public class PessoaDAO {
+
+	/**
+	 * Lista os registro conforme os parâmentro definido no filro.
+	 */
+	public List<Pessoa> listar(PessoaFilter filter) {
+		Session session = getSession();
+		return QueryEasy.list(filter, Pessoa.class, session);
+	}
+
+	/**
+	 * Retorna o total de registro da consulta.
+	 */
+	public Long listarRowCount(PessoaFilter filter) {
+		Session session = getSession();
+		return QueryEasy.count(filter, Pessoa.class, session);
+	}	
+}
+  ```
+
 
 
 
