@@ -53,6 +53,34 @@ public enum RestrictionType {
 				boolean ignoreCase) {
 			return Restrictions.between(propertyName, value, bindValue);
 		}
+	},
+	GT {
+		@Override
+		public Criterion getCriterion(String propertyName, Object value, Object bindValue, MatchMode matchMode,
+				boolean ignoreCase) {
+			return Restrictions.gt(propertyName, value);
+		}
+	},
+	GE {
+		@Override
+		public Criterion getCriterion(String propertyName, Object value, Object bindValue, MatchMode matchMode,
+				boolean ignoreCase) {
+			return Restrictions.ge(propertyName, value);
+		}
+	},
+	LT {
+		@Override
+		public Criterion getCriterion(String propertyName, Object value, Object bindValue, MatchMode matchMode,
+				boolean ignoreCase) {
+			return Restrictions.lt(propertyName, value);
+		}
+	},
+	LE {
+		@Override
+		public Criterion getCriterion(String propertyName, Object value, Object bindValue, MatchMode matchMode,
+				boolean ignoreCase) {
+			return Restrictions.le(propertyName, value);
+		}
 	};
 
 	public abstract Criterion getCriterion(String propertyName, Object value, Object bindValue, MatchMode matchMode,
