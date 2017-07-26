@@ -23,7 +23,7 @@ public @interface JoinFilter {
 	 * Define o nome da propriedade, quando não informado nome da propriedade
 	 * anotada deve ser equivalente ao nome da propriedade na entidade.
 	 */
-	String property();
+	String property() default "";
 
 	/**
 	 * Tipo de Join(INNER_JOIN, LEFT_JOIN...). O valor INNER_JOIN.

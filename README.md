@@ -2,7 +2,7 @@
 Este utilitário visa facilitar a criação de queries com o hibernate. Por meio de filtros pré definidos ele gera automáticamente as queries implementando, além do filtro de consulta, ordenação e paginação sob demanda. Tudo isso de forma transparente. Otimiza a criação de queries abstraindo a complexidade e reduzindo significativamente a quantidade de código. 
 
 # Utilização
-A utilização é muito simples, basta extender a classe QueryFilter e definir os campos da consulta através da anotação @QueryField e @JoinFilter. Uma vez definido os filtros de consulta, utilizes os métodos disponíveis na classe QueryEasy para gerar as consultas. 
+A utilização é muito simples, basta extender a classe QueryFilter e definir os campos da consulta através da anotação @QueryField e @JoinFilter e utilizar os métodos disponíveis na classe QueryEasy para gerar as consultas a partir dos filtros definidos. 
 
 ## @QueryField
 Define um campo de consulta, esta anotação tem as seguintes propriedades:
@@ -119,7 +119,7 @@ public class PessoaDAO {
 }
   ```
   
-Conforme podemos ver nos exemplos acima, uma vez definidos os filtros da consulta, basta utilizar a classe QueryEasy para geras as consultas. Simples assim! 
+Como podemos ver nos exemplos acima, uma vez definidos os filtros da consulta, basta utilizar a classe QueryEasy para geras as consultas. Simples assim! Dúvidas?
 
 
 

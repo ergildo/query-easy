@@ -25,4 +25,8 @@ public class StringUtils {
 		return !isEmpty(value);
 	}
 
+	public static String nvl(String value, String defaultValue) {
+		return isEmpty(value) ? defaultValue : value;
+	}
+
 }

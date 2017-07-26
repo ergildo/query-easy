@@ -9,8 +9,6 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 
-import br.com.ecd.queryutil.util.QueryUtils;
-
 /**
  * Este utilitário visa facilitar a criação de queries com o hibernate. Por meio
  * de filtros pré definidos ele gera automáticamente as queries implementando,
@@ -44,7 +42,7 @@ public class QueryEasy {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> list(QueryFilter filter, Class<T> entity, Session session) {
-		QueryUtils query = QueryUtils.getInstance();
+		QueryGenerator query = QueryGenerator.getInstance();
 		Criteria criteria = query.createCriteria(session, entity, filter);
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
@@ -58,7 +56,7 @@ public class QueryEasy {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T count(QueryFilter filter, Class<?> entity, Session session) {
-		QueryUtils query = QueryUtils.getInstance();
+		QueryGenerator query = QueryGenerator.getInstance();
 		Criteria criteria = query.createCriteria(session, entity, filter);
 		criteria.setProjection(Projections.rowCount());
 		return (T) criteria.uniqueResult();
@@ -71,7 +69,7 @@ public class QueryEasy {
 	 * @return
 	 */
 	private static <T> Criteria createCriteria(QueryFilter filter, Class<T> entity, Session session) {
-		QueryUtils query = QueryUtils.getInstance();
+		QueryGenerator query = QueryGenerator.getInstance();
 		Criteria criteria = query.createCriteria(session, entity, filter);
 		return criteria;
 	}

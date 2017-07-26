@@ -1,4 +1,4 @@
-package br.com.ecd.queryutil.util;
+package br.com.ecd.queryutil;
 
 import java.beans.Introspector;
 import java.lang.reflect.Field;
@@ -11,11 +11,9 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.sql.JoinType;
 
-import br.com.ecd.queryutil.OrderField;
-import br.com.ecd.queryutil.QueryFilter;
-import br.com.ecd.queryutil.RestrictionType;
 import br.com.ecd.queryutil.annotation.JoinFilter;
 import br.com.ecd.queryutil.annotation.QueryField;
+import br.com.ecd.queryutil.util.StringUtils;
 
 /**
  * Este utilitário visa facilitar a criação de queries com o hibernate. Por meio
@@ -27,15 +25,15 @@ import br.com.ecd.queryutil.annotation.QueryField;
  * @author ergildo.cdias
  *
  */
-public class QueryUtils {
+public class QueryGenerator {
 
 	private Map<String, String> joins;
 
-	public static QueryUtils getInstance() {
-		return new QueryUtils();
+	public static QueryGenerator getInstance() {
+		return new QueryGenerator();
 	}
 
-	private QueryUtils() {
+	private QueryGenerator() {
 
 	}
 
@@ -168,11 +166,14 @@ public class QueryUtils {
 					continue;
 				}
 
+				String fieldName = field.getName();
+
 				if (field.isAnnotationPresent(JoinFilter.class)) {
 
 					JoinFilter joinFilter = field.getAnnotation(JoinFilter.class);
 
-					String newAlias = createAlias(alias, criteria, joinFilter.property(), joinFilter.joinType());
+					String newAlias = createAlias(alias, criteria, StringUtils.nvl(joinFilter.property(), fieldName),
+							joinFilter.joinType());
 
 					addRestritions(criteria, newAlias, value);
 
@@ -182,7 +183,7 @@ public class QueryUtils {
 
 					QueryField queryField = field.getAnnotation(QueryField.class);
 
-					String propertyName = getPropertyPath(alias, queryField.property());
+					String propertyName = getPropertyPath(alias, StringUtils.nvl(queryField.property(), fieldName));
 
 					String bindField = queryField.bindField();
 
