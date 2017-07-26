@@ -2,7 +2,7 @@
 Este utilitário visa facilitar a criação de queries com o hibernate. Por meio de filtros pré definidos ele gera automáticamente as queries implementando, além do filtro de consulta, ordenação e paginação sob demanda. Tudo isso de forma transparente. Otimiza a criação de queries abstraindo a complexidade e reduzindo significativamente a quantidade de código. 
 
 # Utilização
-A utilização é muito simples, basta extender a classe QueryFilter e definir os campos da consulta através da anotação @QueryField e @JoinFilter.
+A utilização é muito simples, basta extender a classe QueryFilter e definir os campos da consulta através da anotação @QueryField e @JoinFilter. Uma vez definido os filtros de consulta, utilizes os métodos disponíveis na classe QueryEasy para gerar as consultas. 
 
 ## @QueryField
 Define um campo de consulta, esta anotação tem as seguintes propriedades:
@@ -43,6 +43,8 @@ public class Pessoa {
 	@OneToOne
 	@JoinColumn(name = "endereco")
 	private Endereco endereco;
+	
+	//Getters and Setters...
 }
 
  ```
@@ -52,6 +54,8 @@ public class Pessoa {
  public class Endereco {
 	private Integer id;
     private String descricao;
+    
+    //Getters and Setters...
 }
  
  ```
@@ -69,6 +73,8 @@ public class PessoaFilter extends QueryFilter {
 	private Date dataInicial;
 
 	private Date dataFinal;	
+	
+	//Getters and Setters...
 
 }
  ```
@@ -80,11 +86,20 @@ Veja que a entidade Pessoa possui o relacionamento com a entidade Endereco, nest
 public class EnderecoFilter {
 	@QueryField
 	private String descricao;
+	
+	//Getters and Setters...
 }
  ```
 ### DAO da entidade Pessoa
  ```
 public class PessoaDAO {
+        /**
+	 *Retorna um registro único conforme os parâmentro definido no filro.
+	 */
+        public Pessoa consultar(PessoaFilter filter) {
+		Session session = getSession();
+		return QueryEasy.find(filter, Pessoa.class, session);
+	}
 
 	/**
 	 * Lista os registro conforme os parâmentro definido no filro.
@@ -103,6 +118,9 @@ public class PessoaDAO {
 	}	
 }
   ```
+  
+Conforme podemos ver nos exemplos acima, uma vez definidos os filtros da consulta, basta utilizar a classe QueryEasy para geras as consultas. Simples assim! 
+
 
 
 
