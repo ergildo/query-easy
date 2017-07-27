@@ -14,76 +14,75 @@ import org.hibernate.criterion.SimpleExpression;
 public enum RestrictionType {
 	LIKE {
 		@Override
-		public Criterion getCriterion(String propertyName, Object value, Object bindValue, MatchMode matchMode,
+		public Criterion getCriterion(String property, Object value, Object bindValue, MatchMode matchMode,
 				boolean ignoreCase) {
 
-			SimpleExpression like = Restrictions.like(propertyName, String.valueOf(value), matchMode);
-
+			SimpleExpression like = Restrictions.like(property, String.valueOf(value), matchMode);
 			return ignoreCase ? like.ignoreCase() : like;
 
 		}
 	},
 	EQ {
 		@Override
-		public Criterion getCriterion(String propertyName, Object value, Object bindValue, MatchMode matchMode,
+		public Criterion getCriterion(String property, Object value, Object bindValue, MatchMode matchMode,
 				boolean ignoreCase) {
-			SimpleExpression eq = Restrictions.eq(propertyName, value);
+			SimpleExpression eq = Restrictions.eq(property, value);
 			return ignoreCase ? eq.ignoreCase() : eq;
 		}
 	},
 	NE {
 		@Override
-		public Criterion getCriterion(String propertyName, Object value, Object bindValue, MatchMode matchMode,
+		public Criterion getCriterion(String property, Object value, Object bindValue, MatchMode matchMode,
 				boolean ignoreCase) {
-			SimpleExpression ne = Restrictions.ne(propertyName, value);
+			SimpleExpression ne = Restrictions.ne(property, value);
 			return ignoreCase ? ne.ignoreCase() : ne;
 
 		}
 	},
 	IN {
 		@Override
-		public Criterion getCriterion(String propertyName, Object value, Object bindValue, MatchMode matchMode,
+		public Criterion getCriterion(String property, Object value, Object bindValue, MatchMode matchMode,
 				boolean ignoreCase) {
-			return Restrictions.in(propertyName, (Object[]) value);
+			return Restrictions.in(property, (Object[]) value);
 		}
 	},
 	BETWEEN {
 		@Override
-		public Criterion getCriterion(String propertyName, Object value, Object bindValue, MatchMode matchMode,
+		public Criterion getCriterion(String property, Object value, Object bindValue, MatchMode matchMode,
 				boolean ignoreCase) {
-			return Restrictions.between(propertyName, value, bindValue);
+			return Restrictions.between(property, value, bindValue);
 		}
 	},
 	GT {
 		@Override
-		public Criterion getCriterion(String propertyName, Object value, Object bindValue, MatchMode matchMode,
+		public Criterion getCriterion(String property, Object value, Object bindValue, MatchMode matchMode,
 				boolean ignoreCase) {
-			return Restrictions.gt(propertyName, value);
+			return Restrictions.gt(property, value);
 		}
 	},
 	GE {
 		@Override
-		public Criterion getCriterion(String propertyName, Object value, Object bindValue, MatchMode matchMode,
+		public Criterion getCriterion(String property, Object value, Object bindValue, MatchMode matchMode,
 				boolean ignoreCase) {
-			return Restrictions.ge(propertyName, value);
+			return Restrictions.ge(property, value);
 		}
 	},
 	LT {
 		@Override
-		public Criterion getCriterion(String propertyName, Object value, Object bindValue, MatchMode matchMode,
+		public Criterion getCriterion(String property, Object value, Object bindValue, MatchMode matchMode,
 				boolean ignoreCase) {
-			return Restrictions.lt(propertyName, value);
+			return Restrictions.lt(property, value);
 		}
 	},
 	LE {
 		@Override
-		public Criterion getCriterion(String propertyName, Object value, Object bindValue, MatchMode matchMode,
+		public Criterion getCriterion(String property, Object value, Object bindValue, MatchMode matchMode,
 				boolean ignoreCase) {
-			return Restrictions.le(propertyName, value);
+			return Restrictions.le(property, value);
 		}
 	};
 
-	public abstract Criterion getCriterion(String propertyName, Object value, Object bindValue, MatchMode matchMode,
+	public abstract Criterion getCriterion(String property, Object value, Object bindValue, MatchMode matchMode,
 			boolean ignoreCase);
 
 }

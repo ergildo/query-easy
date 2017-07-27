@@ -44,6 +44,7 @@ public class QueryEasy {
 	public static <T> List<T> list(QueryFilter filter, Class<T> entity, Session session) {
 		QueryGenerator query = QueryGenerator.getInstance();
 		Criteria criteria = query.createCriteria(session, entity, filter);
+		addPaginator(filter, criteria);
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
@@ -72,6 +73,11 @@ public class QueryEasy {
 		QueryGenerator query = QueryGenerator.getInstance();
 		Criteria criteria = query.createCriteria(session, entity, filter);
 		return criteria;
+	}
+
+	private static void addPaginator(QueryFilter filter, Criteria criteria) {
+		criteria.setMaxResults(filter.getMaxResult());
+		criteria.setFirstResult(filter.getFirstResult());
 	}
 
 }

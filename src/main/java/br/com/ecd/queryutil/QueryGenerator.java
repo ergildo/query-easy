@@ -66,8 +66,6 @@ public class QueryGenerator {
 
 			addOrder(filter, alias, criteria);
 
-			addPaginator(filter, criteria);
-
 			return criteria;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -80,11 +78,6 @@ public class QueryGenerator {
 
 	private String getAliasByClass(Class<?> entity) {
 		return Introspector.decapitalize(entity.getSimpleName());
-	}
-
-	private void addPaginator(QueryFilter filter, Criteria criteria) {
-		criteria.setMaxResults(filter.getMaxResult());
-		criteria.setFirstResult(filter.getFirstResult());
 	}
 
 	private void addOrder(QueryFilter filter, String alias, Criteria criteria)
