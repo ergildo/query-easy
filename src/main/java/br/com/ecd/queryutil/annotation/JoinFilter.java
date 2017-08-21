@@ -28,5 +28,5 @@ public @interface JoinFilter {
 	/**
 	 * Tipo de Join(INNER_JOIN, LEFT_JOIN...). O valor INNER_JOIN.
 	 */
-	JoinType joinType() default JoinType.INNER_JOIN;
+	JoinType joinType() default JoinType.LEFT_OUTER_JOIN;
 }
